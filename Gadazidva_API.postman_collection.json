@@ -1,0 +1,1882 @@
+{
+	"info": {
+		"_postman_id": "gadazidva-api-collection",
+		"name": "Gadazidva API",
+		"description": "Complete API collection for Gadazidva Transportation Service Platform\n\nSupports bilingual responses (English & Georgian)\nSet Accept-Language header: 'en' or 'ka'",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"description": "Language: 'en' or 'ka'"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"phone\": \"+995555123456\",\n  \"city\": \"Tbilisi\",\n  \"address\": \"123 Main St\",\n  \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						},
+						"description": "Register a new user. Roles: user, driver, assistant"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"auth_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": "Login and receive authentication token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"me"
+							]
+						},
+						"description": "Get authenticated user details"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						},
+						"description": "Revoke current access token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service Posts",
+			"item": [
+				{
+					"name": "List Service Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service-posts?origin_city=Tbilisi&destination_city=Batumi&per_page=15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service-posts"
+							],
+							"query": [
+								{
+									"key": "origin_city",
+									"value": "Tbilisi",
+									"description": "Filter by origin city"
+								},
+								{
+									"key": "destination_city",
+									"value": "Batumi",
+									"description": "Filter by destination city"
+								},
+								{
+									"key": "cargo_type_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "loading_date_from",
+									"value": "2025-11-01",
+									"disabled": true
+								},
+								{
+									"key": "loading_date_to",
+									"value": "2025-11-30",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Service Post",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service-posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service-posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Service Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cargo_type_id\": 1,\n  \"title\": \"Furniture delivery from Tbilisi to Batumi\",\n  \"origin_address\": \"123 Main St\",\n  \"origin_city\": \"Tbilisi\",\n  \"origin_latitude\": 41.7151,\n  \"origin_longitude\": 44.8271,\n  \"destination_address\": \"456 Beach Rd\",\n  \"destination_city\": \"Batumi\",\n  \"destination_latitude\": 41.6168,\n  \"destination_longitude\": 41.6367,\n  \"loading_date\": \"2025-11-01 09:00:00\",\n  \"cargo_weight\": 500,\n  \"description\": \"2 sofas and 1 dining table\",\n  \"contact_phone\": \"+995555123456\",\n  \"contact_email\": \"user@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/service-posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service-posts"
+							]
+						},
+						"description": "Create new service post (User role required)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Service Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated furniture delivery\",\n  \"description\": \"3 sofas and 2 dining tables\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/service-posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service-posts",
+								"1"
+							]
+						},
+						"description": "Update service post (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Service Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service-posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service-posts",
+								"1"
+							]
+						},
+						"description": "Delete service post (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Service Posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-service-posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-service-posts"
+							]
+						},
+						"description": "Get authenticated user's service posts"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Driver Profiles",
+			"item": [
+				{
+					"name": "List Driver Profiles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/driver-profiles?city=Tbilisi&vehicle_type_id=1&min_rating=4&is_available=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"driver-profiles"
+							],
+							"query": [
+								{
+									"key": "vehicle_type_id",
+									"value": "1",
+									"description": "Filter by vehicle type"
+								},
+								{
+									"key": "city",
+									"value": "Tbilisi"
+								},
+								{
+									"key": "min_rating",
+									"value": "4"
+								},
+								{
+									"key": "max_rate",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "is_available",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Driver Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/driver-profiles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"driver-profiles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Driver Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicle_type_id\": 1,\n  \"vehicle_make\": \"Toyota\",\n  \"vehicle_model\": \"Hiace\",\n  \"vehicle_year\": 2020,\n  \"vehicle_plate_number\": \"TB-123-AB\",\n  \"vehicle_color\": \"White\",\n  \"vehicle_capacity\": 1500,\n  \"bio\": \"Experienced driver with 10 years in transportation\",\n  \"base_rate_per_km\": 2.5,\n  \"base_rate_fixed\": 50\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/driver-profiles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"driver-profiles"
+							]
+						},
+						"description": "Create driver profile (Driver role required)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Driver Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"base_rate_per_km\": 3.0,\n  \"bio\": \"Updated bio information\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/driver-profiles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"driver-profiles",
+								"1"
+							]
+						},
+						"description": "Update driver profile (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Driver Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/driver-profiles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"driver-profiles",
+								"1"
+							]
+						},
+						"description": "Delete driver profile (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Driver Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-driver-profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-driver-profile"
+							]
+						},
+						"description": "Get authenticated driver's profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Trip Cost",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/driver-profiles/1/calculate-cost?distance=50",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"driver-profiles",
+								"1",
+								"calculate-cost"
+							],
+							"query": [
+								{
+									"key": "distance",
+									"value": "50",
+									"description": "Distance in km"
+								}
+							]
+						},
+						"description": "Calculate trip cost based on distance"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Helper Posts",
+			"item": [
+				{
+					"name": "List Helper Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts?location_city=Tbilisi&helpers_needed=2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts"
+							],
+							"query": [
+								{
+									"key": "location_city",
+									"value": "Tbilisi"
+								},
+								{
+									"key": "required_date_from",
+									"value": "2025-11-01",
+									"disabled": true
+								},
+								{
+									"key": "required_date_to",
+									"value": "2025-11-30",
+									"disabled": true
+								},
+								{
+									"key": "min_rate",
+									"value": "30",
+									"disabled": true
+								},
+								{
+									"key": "helpers_needed",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Helper Post",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Helper Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Need 2 helpers for furniture loading\",\n  \"description\": \"Loading furniture from 3rd floor apartment\",\n  \"location_address\": \"789 Central Ave\",\n  \"location_city\": \"Tbilisi\",\n  \"location_latitude\": 41.7151,\n  \"location_longitude\": 44.8271,\n  \"required_date\": \"2025-11-05 14:00:00\",\n  \"duration_hours\": 3,\n  \"helpers_needed\": 2,\n  \"offered_rate\": 50,\n  \"contact_phone\": \"+995555123456\",\n  \"requirements\": \"Ability to lift heavy items\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts"
+							]
+						},
+						"description": "Create helper post (Driver role required)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Helper Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"offered_rate\": 60,\n  \"helpers_needed\": 3\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts",
+								"1"
+							]
+						},
+						"description": "Update helper post (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Helper Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts",
+								"1"
+							]
+						},
+						"description": "Delete helper post (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Helper Posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-helper-posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-helper-posts"
+							]
+						},
+						"description": "Get authenticated driver's helper posts"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Helper Post as Filled",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts/1/mark-filled",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts",
+								"1",
+								"mark-filled"
+							]
+						},
+						"description": "Mark helper post as filled (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Helper Post as Completed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/helper-posts/1/mark-completed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"helper-posts",
+								"1",
+								"mark-completed"
+							]
+						},
+						"description": "Mark helper post as completed (Owner only)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Assistant Profiles",
+			"item": [
+				{
+					"name": "List Assistant Profiles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/assistant-profiles?city=Tbilisi&min_rating=4&has_own_tools=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"assistant-profiles"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Tbilisi"
+								},
+								{
+									"key": "min_rating",
+									"value": "4"
+								},
+								{
+									"key": "max_hourly_rate",
+									"value": "30",
+									"disabled": true
+								},
+								{
+									"key": "has_own_tools",
+									"value": "1"
+								},
+								{
+									"key": "is_available",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Assistant Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/assistant-profiles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"assistant-profiles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Assistant Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bio\": \"Professional mover with 5 years experience\",\n  \"skills\": \"Heavy lifting, Packing, Assembly, Disassembly\",\n  \"years_of_experience\": 5,\n  \"hourly_rate\": 25,\n  \"has_own_tools\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/assistant-profiles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"assistant-profiles"
+							]
+						},
+						"description": "Create assistant profile (Assistant role required)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Assistant Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hourly_rate\": 30,\n  \"years_of_experience\": 6\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/assistant-profiles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"assistant-profiles",
+								"1"
+							]
+						},
+						"description": "Update assistant profile (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Assistant Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/assistant-profiles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"assistant-profiles",
+								"1"
+							]
+						},
+						"description": "Delete assistant profile (Owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Assistant Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-assistant-profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-assistant-profile"
+							]
+						},
+						"description": "Get authenticated assistant's profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Job Cost",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/assistant-profiles/1/calculate-cost?hours=4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"assistant-profiles",
+								"1",
+								"calculate-cost"
+							],
+							"query": [
+								{
+									"key": "hours",
+									"value": "4",
+									"description": "Duration in hours"
+								}
+							]
+						},
+						"description": "Calculate job cost based on hours"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ratings",
+			"item": [
+				{
+					"name": "Create Rating",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rated_id\": 5,\n  \"rateable_type\": \"App\\\\Models\\\\DriverProfile\",\n  \"rateable_id\": 3,\n  \"rating\": 4.5,\n  \"comment\": \"Great driver, professional and on time!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ratings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ratings"
+							]
+						},
+						"description": "Submit a rating (1.0 to 5.0)\nRateable types: DriverProfile, AssistantProfile, ServicePost"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Entity Ratings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ratings/entity?type=App\\Models\\DriverProfile&id=3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ratings",
+								"entity"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "App\\Models\\DriverProfile"
+								},
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Get all ratings for an entity"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Given Ratings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-given-ratings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-given-ratings"
+							]
+						},
+						"description": "Get ratings given by authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Received Ratings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-received-ratings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-received-ratings"
+							]
+						},
+						"description": "Get ratings received by authenticated user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Distance Calculator",
+			"item": [
+				{
+					"name": "Calculate Distance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"origin_lat\": 41.7151,\n  \"origin_lon\": 44.8271,\n  \"dest_lat\": 41.6168,\n  \"dest_lon\": 41.6367\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/distance/calculate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"distance",
+								"calculate"
+							]
+						},
+						"description": "Calculate distance between two coordinates using Haversine formula"
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Trip Estimate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"origin_lat\": 41.7151,\n  \"origin_lon\": 44.8271,\n  \"dest_lat\": 41.6168,\n  \"dest_lon\": 41.6367,\n  \"rate_per_km\": 2.5,\n  \"fixed_rate\": 50\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/distance/estimate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"distance",
+								"estimate"
+							]
+						},
+						"description": "Calculate distance and estimated cost"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messaging",
+			"item": [
+				{
+					"name": "Get My Conversations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/conversations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"conversations"
+							]
+						},
+						"description": "Get all conversations for authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create or Get Conversation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"other_user_id\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/conversations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"conversations"
+							]
+						},
+						"description": "Create conversation or get existing one"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Conversation Messages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/conversations/1/messages?page=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								"1",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get paginated messages (50 per page)"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"conversation_id\": 1,\n  \"content\": \"Hello, is your service still available?\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/messages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"messages"
+							]
+						},
+						"description": "Send a message in a conversation"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Message as Read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/messages/1/mark-read",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"1",
+								"mark-read"
+							]
+						},
+						"description": "Mark a message as read"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Unread Messages Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/messages/unread-count",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"unread-count"
+							]
+						},
+						"description": "Get total unread messages count"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Create Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payee_id\": 5,\n  \"payable_type\": \"App\\\\Models\\\\ServicePost\",\n  \"payable_id\": 10,\n  \"amount\": 500.00,\n  \"description\": \"Payment for furniture transport\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							]
+						},
+						"description": "Create a new payment"
+					},
+					"response": []
+				},
+				{
+					"name": "Process Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_method\": \"card\",\n  \"payment_gateway\": \"stripe\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments/1/process",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1",
+								"process"
+							]
+						},
+						"description": "Process payment\nMethods: card, cash, bank_transfer\nGateways: stripe, bog, tbc"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Payments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/my-payments?type=sent",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"my-payments"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "sent",
+									"description": "Filter: sent, received, or omit for all"
+								}
+							]
+						},
+						"description": "Get user's payments"
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Platform Fee",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 500\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments/calculate-fee",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"calculate-fee"
+							]
+						},
+						"description": "Calculate platform fee (5%)"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
