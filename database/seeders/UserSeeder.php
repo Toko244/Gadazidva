@@ -12,10 +12,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = \App\Models\User::factory()->create([
+        $user = \App\Models\User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'), // Change this to a secure password
+            'password' => bcrypt('password'),
         ]);
     }
 }

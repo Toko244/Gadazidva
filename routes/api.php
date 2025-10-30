@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ServicePostController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\DriverProfileController;
 use App\Http\Controllers\Api\HelperPostController;
 use App\Http\Controllers\Api\AssistantProfileController;
@@ -24,6 +25,10 @@ Route::post('/login', [AuthController::class, 'login']);
 // Get active service posts (visible to drivers)
 Route::get('/service-posts', [ServicePostController::class, 'index']);
 Route::get('/service-posts/{servicePost}', [ServicePostController::class, 'show']);
+
+// Get comments for service posts (public)
+Route::get('/service-posts/{servicePostId}/comments', [CommentController::class, 'index']);
+Route::get('/comments/{comment}', [CommentController::class, 'show']);
 
 // Get active driver profiles (visible to users)
 Route::get('/driver-profiles', [DriverProfileController::class, 'index']);
@@ -54,6 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Service post management (owner only)
     Route::put('/service-posts/{servicePost}', [ServicePostController::class, 'update']);
     Route::delete('/service-posts/{servicePost}', [ServicePostController::class, 'destroy']);
+
+    // Comment management (all authenticated users can comment)
+    Route::post('/comments', [CommentController::class, 'store']);
+    Route::put('/comments/{comment}', [CommentController::class, 'update']);
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
 
     // Driver profile management (only drivers can create)
     Route::middleware('role:driver')->group(function () {

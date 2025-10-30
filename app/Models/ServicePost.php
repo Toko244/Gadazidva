@@ -47,6 +47,11 @@ class ServicePost extends Model
         return $this->hasMany(ServicePostImage::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'active')->where('is_published', true);
